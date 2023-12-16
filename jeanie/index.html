@@ -1,0 +1,268 @@
+<!DOCTYPE html><html><head>
+    <title>rhy</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta property="og:title" content="🔪">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="https://riprhy.lol/">
+    <meta name="theme-color" content="#303135">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="shortcut icon" href="images/0.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.min.css">
+
+<script type="text/javascript" src="js/app.js"></script></head>
+
+
+
+
+
+<body><div id="main">
+    <table class="box">
+        <tbody>
+            <tr>
+                <td><span id="line1" style="white-space: pre;"></span></td>
+            </tr>
+            <tr>
+                <td><span id="line2" style="white-space: normal;"></span></td>
+            </tr>
+            <tr>
+                <td><span id="line3 space" style="white-space: pre;"></span></td>
+            </tr>
+            <tr>
+                <td><span id="line4" style="white-space: pre;"></span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container music-player" style="text-align: center;">
+    <div id="musicPlayer" style="background-color: transparent; padding: 10px; border-radius: 5px; margin: 0 auto;">
+        <button id="prev" class="player-btn">
+            <object type="image/svg+xml" data="images/back.svg" class="button-svg">Previous</object>
+        </button>
+        <button id="playPause" class="player-btn">
+            <img id="playPauseIcon" src="images/play.svg" class="button-svg" alt="Play/Pause">
+        </button>
+        <button id="next" class="player-btn">
+            <object type="image/svg+xml" data="images/next.svg" class="button-svg">Next</object>
+        </button>
+        <audio id="audioPlayer"></audio>
+
+        <div id="nowPlayingContainer"></div>
+            <div id="nowPlayingText" class="now-playing">Now Playing - </div>
+    </div>
+</div>
+
+
+
+<div class="container" style="display: none;">
+    <h1 class="brand-header portfolio-experiment">
+        <a href="https://www.youtube.com/watch?v=5LrzQf_empU&ab_" target="_BLANK" class="experiment-title">riprhy</a>
+    </h1>
+
+    <p>
+        <span id="brand"></span>
+        </p><div style="margin-top: 10px;">
+            <img src="images/014d43e9_original.gif" width="15px" span="" class="cursor-pointer text-xl" title="the big one">
+            <img src="images/2f0d0237_original.gif" width="15px" span="" class="cursor-pointer text-xl" title="she">
+            <img src="images/79d28dda_original.gif" width="15px" span="" class="cursor-pointer text-xl" title="oh">
+            <img src="images/d2687b9b_original.gif" width="15px" span="" class="cursor-pointer text-xl" title=";-;">
+
+
+            </div>
+    <p></p>
+
+  <style>
+    .sparkle-background {
+        /* Propiedades anteriores */
+        background-image: url(images/sparkle.gif);
+        background-repeat: no-repeat;
+        display: inline-block;
+        padding: 5px;
+        line-height: 1.5;
+        text-align: center;
+
+        /* Ajustes para el tamaño y posición del fondo */
+        background-size: auto; /* Ajusta el tamaño manteniendo la proporción */
+        background-position: center; /* Centra el fondo */
+    }
+    </style>
+  
+   <div id="viewcounter" class="sparkle-background">
+        <span id="viewcounter" style="filter: drop-shadow(8px 8px 10px rgba(255, 34, 255, 0.315)); color: #afafaf; font-weight: bold;">
+            👁️: <span id="viewCount" style="color: inherit; font-weight: inherit;">1</span>
+        </span>
+    </div>
+<br>    
+<br>
+
+        
+    <p></p>
+</div>
+
+<script>
+    let songList = [
+        'music/smile music.mp3',
+        'music/UH HUH.mp3',
+        'music/maple.mp3',
+        'music/ETA.mp3',
+        'music/Ailing Emotions.mp3',
+    ];
+    let currentSongIndex = 0;
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    function loadSong(songIndex) {
+        const songPath = songList[songIndex];
+        const songName = songPath.split('/').pop().split('.').shift().replace(/_/g, ' ');
+        document.getElementById('nowPlayingText').textContent = `Now Playing - ${songName}`;
+        audioPlayer.src = songList[songIndex];
+        audioPlayer.load();
+    }
+
+    function togglePlayPause() {
+        if (audioPlayer.paused || audioPlayer.ended) {
+            audioPlayer.play();
+        } else {
+            audioPlayer.pause();
+        }
+        updatePlayPauseIcon();
+    }
+
+    function updatePlayPauseIcon() {
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        if (audioPlayer.paused) {
+            playPauseIcon.src = 'images/c31146d4_original.gif';
+        } else {
+            playPauseIcon.src = 'images/9672bf49_original.gif';
+        }
+    }
+
+    document.getElementById('playPause').addEventListener('click', togglePlayPause);
+
+    document.getElementById('prev').addEventListener('click', function() {
+        currentSongIndex = (currentSongIndex - 1 + songList.length) % songList.length;
+        loadSong(currentSongIndex);
+        audioPlayer.play();
+        updatePlayPauseIcon();
+    });
+
+    document.getElementById('next').addEventListener('click', function() {
+        currentSongIndex = (currentSongIndex + 1) % songList.length;
+        loadSong(currentSongIndex);
+        audioPlayer.play();
+        updatePlayPauseIcon();
+    });
+
+    audioPlayer.addEventListener('ended', updatePlayPauseIcon);
+
+    // waits for intro to finish before playing music
+    document.addEventListener('introFinished', function() {
+        loadSong(currentSongIndex);
+        audioPlayer.play().then(() => {
+            console.log("Music started after intro");
+            updatePlayPauseIcon();
+        }).catch(error => {
+            console.log("Music play error after intro:", error);
+        });
+
+        audioPlayer.addEventListener('ended', function() {
+        currentSongIndex = (currentSongIndex + 1) % songList.length;
+        loadSong(currentSongIndex);
+        audioPlayer.play();
+        updatePlayPauseIcon();
+    });
+    });
+</script>
+
+<script>
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    })
+
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    function ctrlShiftKey(e, keyCode) {
+      return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+    }
+
+    document.onkeydown = (e) => {
+      if (
+        event.keyCode === 123 ||
+        ctrlShiftKey(e, 'I') ||
+        ctrlShiftKey(e, 'J') ||
+        ctrlShiftKey(e, 'C') ||
+        (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+      )
+        return false;
+    };
+</script>
+
+    <!-- JavaScript para el contador -->
+    <script>
+        // Obtener el contador de visitas desde el almacenamiento local
+        let visitCount = localStorage.getItem('visitCount');
+
+        // Verificar si hay un contador existente en el almacenamiento local
+        if (!visitCount) {
+            // Si no hay un contador existente, iniciar en 1
+            visitCount = 1;
+        } else {
+            // Si hay un contador existente, aumentar en 1
+            visitCount = parseInt(visitCount) + 1;
+        }
+
+        // Mostrar el contador en la página
+        document.getElementById('viewCount').innerText = visitCount;
+
+        // Guardar el contador actualizado en el almacenamiento local
+        localStorage.setItem('visitCount', visitCount);
+    </script>
+    
+    <div class="marquee-container" style="visibility: hidden;">
+        <pre>|<div id="marquee"></div>|</pre>
+    </div>
+
+    <div class="background" style="display: none;">
+        <div id="pattern"></div>
+
+        <audio id="audio" loop="">
+            <script>
+                const audio = document.getElementById('audio');
+
+                app.audioElement = audio;
+                app.audioElement.volume = 0;
+            </script>
+        </audio>
+
+        <video id="background" loop="">
+            <source src="media/Untitled video - Made with Clipchamp (1).mp4" type="video/mp4">
+            <script>
+                const video = document.getElementById('background');
+
+                app.videoElement = video;
+                app.videoElement.volume = 0;
+            </script>
+        </video>
+    </div>
+
+    <div class="top-right">
+        <i><a class="skip"> </a></i>
+    </div>
+
+    <div class="footer">
+        <i><a href="https://discord.gg/3005" target="_BLANK">favorite place</a></i>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.marquee.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/typed.min.js"></script>
+    <script type="text/javascript" src="js/portfolio.js"></script>
+    <script src="js/oneko.js"></script>
+
+
+
+</body></html>
